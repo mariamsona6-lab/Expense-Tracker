@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .container{
+            width: 500px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h2{
+            color: #0066cc;
+        }
+
+        input{
+            width: 90%;
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button{
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover{
+            background-color: #218838;
+        }
+
+        table{
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th{
+            background-color: #0066cc;
+            color: white;
+            padding: 10px;
+        }
+
+        td{
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        h3{
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Expense Tracker System</h2>
+
+    <input type="date" id="date"><br>
+
+    <input type="number" id="amount" placeholder="Enter Amount"><br>
+
+    <input type="text" id="category" placeholder="Enter Category"><br>
+
+    <button onclick="addExpense()">Add Expense</button>
+
+    <table id="expenseTable">
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Category</th>
+        </tr>
+    </table>
+
+    <h3>Total Expense: ₹<span id="total">0</span></h3>
+</div>
+
+<script>
+let total = 0;
+
+function addExpense()
+{
+    let date = document.getElementById("date").value;
+    let amount = document.getElementById("amount").value;
+    let category = document.getElementById("category").value;
+
+    if(date=="" || amount=="" || category=="")
+    {
+        alert("Fill all fields");
+        return;
+    }
+
+    let table = document.getElementById("expenseTable");
+    let row = table.insertRow();
+
+    row.insertCell(0).innerHTML = date;
+    row.insertCell(1).innerHTML = amount;
+    row.insertCell(2).innerHTML = category;
+
+    total += parseInt(amount);
+    document.getElementById("total").innerHTML = total;
+
+    document.getElementById("date").value = "";
+    document.getElementById("amount").value = "";
+    document.getElementById("category").value = "";
+}
+</script>
+
+</body>
+</html>

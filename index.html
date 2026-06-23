@@ -22,13 +22,13 @@
             color: #0066cc;
         }
 
-        input{
+        input, select{
             width: 90%;
             padding: 8px;
             margin: 5px;
         }
 
-        button{
+        .add-btn{
             background-color: #28a745;
             color: white;
             border: none;
@@ -37,8 +37,17 @@
             border-radius: 5px;
         }
 
-        button:hover{
+        .add-btn:hover{
             background-color: #218838;
+        }
+
+        .delete-btn{
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
         table{
@@ -73,15 +82,23 @@
 
     <input type="number" id="amount" placeholder="Enter Amount"><br>
 
-    <input type="text" id="category" placeholder="Enter Category"><br>
+    <select id="category">
+        <option value="">Select Category</option>
+        <option value="Food">Food</option>
+        <option value="Travel">Travel</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Education">Education</option>
+        <option value="Other">Other</option>
+    </select><br><br>
 
-    <button onclick="addExpense()">Add Expense</button>
+    <button class="add-btn" onclick="addExpense()">Add Expense</button>
 
     <table id="expenseTable">
         <tr>
             <th>Date</th>
             <th>Amount</th>
             <th>Category</th>
+            <th>Action</th>
         </tr>
     </table>
 
@@ -89,34 +106,72 @@
 </div>
 
 <script>
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let total = 0;
 
-function addExpense()
-{
+function displayExpenses() {
+    let table = document.getElementById("expenseTable");
+
+    while(table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+    total = 0;
+
+    expenses.forEach((expense, index) => {
+        let row = table.insertRow();
+
+        row.insertCell(0).innerHTML = expense.date;
+        row.insertCell(1).innerHTML = expense.amount;
+        row.insertCell(2).innerHTML = expense.category;
+
+        let btn = document.createElement("button");
+        btn.innerHTML = "Delete";
+        btn.className = "delete-btn";
+        btn.onclick = function() {
+            deleteExpense(index);
+        };
+
+        row.insertCell(3).appendChild(btn);
+
+        total += Number(expense.amount);
+    });
+
+    document.getElementById("total").innerHTML = total;
+}
+
+function addExpense() {
     let date = document.getElementById("date").value;
     let amount = document.getElementById("amount").value;
     let category = document.getElementById("category").value;
 
-    if(date=="" || amount=="" || category=="")
-    {
-        alert("Fill all fields");
+    if(date === "" || amount === "" || category === "") {
+        alert("Please fill all fields");
         return;
     }
 
-    let table = document.getElementById("expenseTable");
-    let row = table.insertRow();
+    expenses.push({
+        date: date,
+        amount: amount,
+        category: category
+    });
 
-    row.insertCell(0).innerHTML = date;
-    row.insertCell(1).innerHTML = amount;
-    row.insertCell(2).innerHTML = category;
+    localStorage.setItem("expenses", JSON.stringify(expenses));
 
-    total += parseInt(amount);
-    document.getElementById("total").innerHTML = total;
+    displayExpenses();
 
     document.getElementById("date").value = "";
     document.getElementById("amount").value = "";
     document.getElementById("category").value = "";
 }
+
+function deleteExpense(index) {
+    expenses.splice(index, 1);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    displayExpenses();
+}
+
+displayExpenses();
 </script>
 
 </body>

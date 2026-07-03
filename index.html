@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Expense Tracker</title>
+    <title>Expense Tracker Report-Computer Science Department</title>
     <style>
         body{
             font-family: Arial, sans-serif;
@@ -76,7 +76,7 @@
 <body>
 
 <div class="container">
-    <h2>Expense Tracker System</h2>
+    <h2>Expense Details </h2>
 
     <input type="date" id="date"><br>
 
@@ -93,6 +93,11 @@
 
     <button class="add-btn" onclick="addExpense()">Add Expense</button>
 
+    <button class="add-btn" onclick="printExpenses()" style="background-color:#007bff;">
+    Print Expenses
+    </button>
+
+    
     <table id="expenseTable">
         <tr>
             <th>Date</th>
@@ -124,16 +129,33 @@ function displayExpenses() {
         row.insertCell(0).innerHTML = expense.date;
         row.insertCell(1).innerHTML = expense.amount;
         row.insertCell(2).innerHTML = expense.category;
+let actionCell = row.insertCell(3);
 
-        let btn = document.createElement("button");
-        btn.innerHTML = "Delete";
-        btn.className = "delete-btn";
-        btn.onclick = function() {
-            deleteExpense(index);
-        };
+// Delete button
+let deleteBtn = document.createElement("button");
+deleteBtn.innerHTML = "Delete";
+deleteBtn.className = "delete-btn";
+deleteBtn.onclick = function () {
+    deleteExpense(index);
+};
 
-        row.insertCell(3).appendChild(btn);
+// Print button
+let printBtn = document.createElement("button");
+printBtn.innerHTML = "Print";
+printBtn.style.backgroundColor = "#007bff";
+printBtn.style.color = "white";
+printBtn.style.border = "none";
+printBtn.style.padding = "5px 10px";
+printBtn.style.marginLeft = "5px";
+printBtn.style.cursor = "pointer";
+printBtn.style.borderRadius = "5px";
+printBtn.onclick = function () {
+    printExpense(expense);
+};
 
+actionCell.appendChild(deleteBtn);
+actionCell.appendChild(printBtn);
+        
         total += Number(expense.amount);
     });
 
@@ -171,6 +193,114 @@ function deleteExpense(index) {
     displayExpenses();
 }
 
+function printExpenses() {
+    let table = document.getElementById("expenseTable").outerHTML;
+    let totalExpense = document.getElementById("total").innerHTML;
+
+    let printWindow = window.open("", "", "width=800,height=600");
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Expense Report</title>
+            <style>
+                body{
+                    font-family: Arial, sans-serif;
+                    padding:20px;
+                }
+                h2{
+                    text-align:center;
+                    color:#0066cc;
+                }
+                table{
+                    width:100%;
+                    border-collapse:collapse;
+                }
+                th, td{
+                    border:1px solid #000;
+                    padding:10px;
+                    text-align:center;
+                }
+                th{
+                    background:#0066cc;
+                    color:white;
+                }
+                button{
+                    display:none;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Expense Report</h2>
+            ${table}
+            <h3>Total Expense: ₹${totalExpense}</h3>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.close();
+}
+function printExpense(expense) {
+    let printWindow = window.open("", "", "width=600,height=500");
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Expense Receipt</title>
+            <style>
+                body{
+                    font-family: Arial, sans-serif;
+                    padding:30px;
+                }
+                h2{
+                    text-align:center;
+                    color:#0066cc;
+                }
+                table{
+                    width:100%;
+                    border-collapse:collapse;
+                    margin-top:20px;
+                }
+                th, td{
+                    border:1px solid #000;
+                    padding:10px;
+                    text-align:left;
+                }
+                th{
+                    width:35%;
+                    background:#f2f2f2;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Expense Receipt</h2>
+
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <td>${expense.date}</td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td>₹${expense.amount}</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>${expense.category}</td>
+                </tr>
+            </table>
+
+            <script>
+                window.print();
+            <\/script>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+}
 displayExpenses();
 </script>
 

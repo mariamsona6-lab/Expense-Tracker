@@ -239,8 +239,10 @@ function printExpenses() {
     `);
 
     printWindow.document.close();
+    printWindow.onload = function () {
+    printWindow.focus();
     printWindow.print();
-    printWindow.close();
+};
 }
 function printExpense(expense) {
     let printWindow = window.open("", "", "width=600,height=500");
